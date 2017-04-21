@@ -44,6 +44,9 @@ if [ ! -e "/var/lib/sharelatex/data/db.sqlite" ]; then
        touch /var/lib/sharelatex/data/db.sqlite
 fi
 
+# See the bottom of http://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach
+echo "`route -n | awk '/UG[ \t]/{print $2}'` dockerhost" >> /etc/hosts
+
 chown www-data:www-data /var/lib/sharelatex/data/db.sqlite
 
 mongod &
@@ -60,6 +63,8 @@ CRYPTO_RANDOM=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev
 sed -i "0,/CRYPTO_RANDOM/s/CRYPTO_RANDOM/$CRYPTO_RANDOM/" /etc/sharelatex/settings.coffee &
 CRYPTO_RANDOM=$(dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev | cut -b 2- | rev | tr -d '\n+/'); \
 sed -i "0,/CRYPTO_RANDOM/s/CRYPTO_RANDOM/$CRYPTO_RANDOM/" /etc/sharelatex/settings.coffee &
+
+
 
 # start sharelatex with logging to files
 SHARELATEX_CONFIG=/etc/sharelatex/settings.coffee node /sharelatex/chat/app.js >> /data/logs/chat.log 2>&1 &
@@ -78,6 +83,7 @@ SHARELATEX_CONFIG=/etc/sharelatex/settings.coffee node /sharelatex/web/app.js >>
 #cd /var/www/sharelatex && grunt check:redis
 #cd /var/www/sharelatex && grunt check:mongo
 #echo "All checks passed"
+
 
 
 cd /sharelatex && grunt migrate -v
