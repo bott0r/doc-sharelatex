@@ -74,10 +74,10 @@ SHARELATEX_CONFIG=/etc/sharelatex/settings.coffee node /sharelatex/track-changes
 SHARELATEX_CONFIG=/etc/sharelatex/settings.coffee node /sharelatex/web/app.js >> /data/logs/web.log 2>&1
 
 
-echo "Checking can connect to mongo and redis"
-cd /var/www/sharelatex && grunt check:redis
-cd /var/www/sharelatex && grunt check:mongo
-echo "All checks passed"
+#echo "Checking can connect to mongo and redis"
+#cd /var/www/sharelatex && grunt check:redis
+#cd /var/www/sharelatex && grunt check:mongo
+#echo "All checks passed"
 
 
-cd /var/www/sharelatex && grunt migrate -v
+cd /sharelatex && grunt migrate -v
